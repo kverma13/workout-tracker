@@ -1,7 +1,10 @@
 import java.time.LocalDate;
 import java.lang.IO;
+import java.util.ArrayList;
 
 public class Main {
+    private static ArrayList<WorkoutEntry> entries = new ArrayList<>();
+
     public static void main(String[] args) {
         WorkoutEntry entry = new WorkoutEntry(LocalDate.now(), "Bench Press", 3, 8, 135);
         IO.println(entry);
@@ -12,7 +15,7 @@ public class Main {
             int input = Integer.parseInt(IO.readln(""));
             switch(input) {
                 case 1:
-                    IO.println("LOGGING COMING SOON");
+                    logWorkout();
                     break;
                 case 2:
                     IO.println("VIEW HISTORY COMING SOON");
@@ -38,6 +41,20 @@ public class Main {
         IO.println("2. View history");
         IO.println("3. Quit");
         IO.println("CHOOSE AN OPTION: ");
+
+
+    }
+
+    private static void logWorkout() {
+        String exersize = IO.readln("Exersize: ");
+        int sets = Integer.parseInt(IO.readln("Sets: "));
+        int reps = Integer.parseInt(IO.readln("Reps: "));
+        double weight = Double.parseDouble(IO.readln("Weight(lbs): "));
+
+        WorkoutEntry entry = new WorkoutEntry(LocalDate.now(), exersize, sets, reps, weight);
+        entries.add(entry);
+        IO.println("Logged: " + entry);
+        IO.println("Total entries: " + entries.size());
 
 
     }
