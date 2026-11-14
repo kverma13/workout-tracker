@@ -18,10 +18,7 @@ public class Main {
                     logWorkout();
                     break;
                 case 2:
-                    IO.println("======LOG HISTORY======");
-                    for (int i = 0; i < entries.size(); i++) {
-                        IO.println(entries.get(i));
-                    }
+                    viewHistory();
                     break;
                 case 3:
                     run = false;
@@ -61,6 +58,20 @@ public class Main {
         IO.println("Total entries: " + entries.size());
         WorkoutStorage.save(entries);
 
+    }
+
+    private static void viewHistory() {
+        if (entries.isEmpty()) {
+            System.out.println("No workouts logged yet. Choose option 1 to add one.");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("=== Workout History ===");
+        for (int i = 0; i < entries.size(); i++) {
+            System.out.println((i + 1) + ". " + entries.get(i));
+        }
+        System.out.println("Total entries: " + entries.size());
     }
 
 
