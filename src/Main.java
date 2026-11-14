@@ -3,7 +3,7 @@ import java.lang.IO;
 import java.util.ArrayList;
 
 public class Main {
-    private static ArrayList<WorkoutEntry> entries = new ArrayList<>();
+    private static ArrayList<WorkoutEntry> entries = WorkoutStorage.load();
 
     public static void main(String[] args) {
         WorkoutEntry entry = new WorkoutEntry(LocalDate.now(), "Bench Press", 3, 8, 135);
@@ -18,12 +18,16 @@ public class Main {
                     logWorkout();
                     break;
                 case 2:
-                    IO.println("VIEW HISTORY COMING SOON");
+                    IO.println("======LOG HISTORY======");
+                    for (int i = 0; i < entries.size(); i++) {
+                        IO.println(entries.get(i));
+                    }
                     break;
                 case 3:
                     run = false;
                     IO.println("GOODBYE");
-                    IO.println("=====THANK YOU FOR USING WORKOUT TRACKER=====");
+                    IO.println("");
+                    IO.println("THANK YOU FOR USING WORKOUT TRACKER");
                     break;
                 default:
                     IO.println("Enter a valid option");
@@ -55,7 +59,7 @@ public class Main {
         entries.add(entry);
         IO.println("Logged: " + entry);
         IO.println("Total entries: " + entries.size());
-
+        WorkoutStorage.save(entries);
 
     }
 
