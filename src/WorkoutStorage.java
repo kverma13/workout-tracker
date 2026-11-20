@@ -48,12 +48,17 @@ public class WorkoutStorage {
                 if (line.isEmpty()) {
                     continue;
                 }
-                String[] parts = line.split(",");
-                entries.add(new WorkoutEntry(LocalDate.parse(parts[0]),
-                        parts[1],
-                        Integer.parseInt(parts[2]),
-                        Integer.parseInt(parts[3]),
-                        Double.parseDouble(parts[4])));
+                try {
+                    String[] parts = line.split(",");
+                    entries.add(new WorkoutEntry(LocalDate.parse(parts[0]),
+                            parts[1],
+                            Integer.parseInt(parts[2]),
+                            Integer.parseInt(parts[3]),
+                            Double.parseDouble(parts[4])));
+                } catch (Exception e) {
+                    IO.println("Skipping bad line: " + line);
+                }
+
             }
 
         } catch (IOException ex) {
