@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Main {
     private static ArrayList<WorkoutEntry> entries = WorkoutStorage.load();
@@ -68,6 +69,22 @@ public class Main {
         IO.println("Total entries: " + entries.size());
     }
 
+    private static String normalize(String exercise) {
+        return exercise.toLowerCase(Locale.ROOT).trim();
+    }
+
+    private static boolean isPersonalRecord(WorkoutEntry entry) {
+        String name = normalize(entry.getExercise());
+
+        for (WorkoutEntry other : entries) {
+            if (normalize(other.getExercise()).equals(name)
+                    && other.getWeight() > entry.getWeight()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private static void viewHistory() {
         if (entries.isEmpty()) {
             IO.println("No workouts logged yet. Choose option 1 to add one.");
@@ -77,8 +94,15 @@ public class Main {
         IO.println();
         IO.println("=== Workout History ===");
         for (int i = 0; i < entries.size(); i++) {
-            IO.println((i + 1) + ". " + entries.get(i));
+            WorkoutEntry e = entries.get(i);
+
+            if (isPersonalRecord(e)) {
+                IO.println((i + 1) + ")   " + e + " ***");
+            } else {
+                IO.println((i + 1) + ")   " + e);
+            }
         }
+        IO.println("*** = personal record");
         IO.println("Total entries: " + entries.size());
     }
 
