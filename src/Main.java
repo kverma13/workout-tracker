@@ -6,7 +6,7 @@ public class Main {
     private static ArrayList<WorkoutEntry> entries = WorkoutStorage.load();
 
     private static final String LINE = "=".repeat(60);
-    private static final String THIN = "-".repeat(60);
+    static final String THIN = "-".repeat(60);
     private static final String ROW = "  %-4s %-11s %-18s %-10s %-10s %s";
 
     public static void main(String[] args) {
@@ -23,7 +23,8 @@ public class Main {
                 case "3" -> { filterByExercise(); pause(); }
                 case "4" -> { editWorkout(); pause(); }
                 case "5" -> { deleteWorkout(); pause(); }
-                case "6" -> {
+                case "6" -> { viewWeeklyVolume(); pause(); }
+                case "7" -> {
                     run = false;
                     IO.println();
                     IO.println(LINE);
@@ -56,11 +57,12 @@ public class Main {
         IO.println("  [3]  Filter by exercise");
         IO.println("  [4]  Edit an entry");
         IO.println("  [5]  Delete an entry");
-        IO.println("  [6]  Quit");
+        IO.println("  [6]  Weekly Volume");
+        IO.println("  [7]  Quit");
         IO.println(THIN);
     }
 
-    private static void printHeader(String title) {
+    static void printHeader(String title) {
         IO.println();
         IO.println(LINE);
         IO.println("  " + title);
@@ -329,5 +331,35 @@ public class Main {
                 IO.println("  Enter a valid number.");
             }
         }
+    }
+
+    private static void viewWeeklyVolume() {
+        printHeader("WEEKLY VOLUME");
+
+        if (entries.isEmpty()) {
+            IO.println("  No workouts logged yet. Choose option 1 to add one.");
+            return;
+        }
+
+        LocalDate first = WorkoutStats.weekStart(entries.get(0).getDate());
+        LocalDate last = first;
+        for (WorkoutEntry e : entries) {
+            LocalDate week = WorkoutStats.weekStart(e.getDate());
+            if (week.isBefore(first)) {
+                first = week;
+            }
+            if (week.isAfter(last)) {
+                last = week;
+            }
+        }
+
+        IO.println(String.format("  %-24s %s", "WEEK OF", "VOLUME"));
+        IO.println(THIN);
+        for (LocalDate week = first; !week.isAfter(last); week = week.plusWeeks(1)) {
+            double total = WorkoutStats.volumeForWeek(entries, week);
+            IO.println(String.format("  %-24s %,.0f lbs", week, total));
+        }
+        IO.println(THIN);
+        IO.println("  Volume = sets x reps x weight");
     }
 }

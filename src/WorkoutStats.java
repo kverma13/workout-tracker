@@ -1,3 +1,5 @@
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class WorkoutStats {
@@ -12,6 +14,20 @@ public class WorkoutStats {
             }
         }
         return true;
+    }
+
+    public static LocalDate weekStart(LocalDate date) {
+        return date.with(DayOfWeek.MONDAY);
+    }
+
+    public static double volumeForWeek(ArrayList<WorkoutEntry> entries, LocalDate weekStart) {
+        double total = 0;
+        for (WorkoutEntry e : entries) {
+            if (weekStart(e.getDate()).equals(weekStart)) {
+                total += e.getSets() * e.getReps() * e.getWeight();
+            }
+        }
+        return total;
     }
 
 }
